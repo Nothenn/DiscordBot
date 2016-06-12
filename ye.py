@@ -3,7 +3,7 @@ from discord.ext import commands
 import random
 
 description = "A little bot used for random things"
-bot = commands.Bot(command_prefix='#', description=description)
+bot = commands.Bot(command_prefix=commands.when_mentioned_or('!'), description=description)
 
 @bot.event
 async def on_ready():
@@ -12,20 +12,22 @@ async def on_ready():
     print('ID: ' + bot.user.id)
 
 @bot.event
-async def on_command_error(error, ctx):
-    await bot.say('Error: ' + error)
-    await bot.say('Context: ' + ctx)
+async def on_message(message):
+    if message.author == bot.user:
+        return
 
-@bot.event
-async def hey(message):
-    if message.content.startswith('#hey'):
-        msg = 'Hello {0.author.mention}\u200B'.format(message)
+    if message.content.startswith('BotHelp'):
+        msg = "Either {} or ! followed by the command\n!math Number Sign Number\n!roll Number\n!rolldnd NdN\n!choose this that\n!repeat Number Thing to repeat".format(bot.user.mention)
         await bot.send_message(message.channel, msg)
+
+    if message.content.startswith('!FuckMeUpFam'):
+        msg = '!FuckMeUpFam'
+        # msg = 'Hello {0.author.mention} https://www.youtube.com/watch?v=gbt61vcAkG0'.format(message)
+        await bot.send_message(message.channel, msg)
+
 
 @bot.command()
 async def math(left : float, sign : str,right : float):
-    result = 0
-    
     if sign == '+':
         result = left + right
     elif sign == '-':
@@ -38,7 +40,6 @@ async def math(left : float, sign : str,right : float):
 
 @bot.command()
 async def rolldnd(dice : str):
-    """Rolls a dice in NdN format."""
     try:
         rolls, limit = map(int, dice.split('d'))
     except Exception:
