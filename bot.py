@@ -20,9 +20,8 @@ async def on_message(message):
         msg = "Either {} or ! followed by the command\n!math Number Sign Number\n!roll Number\n!rolldnd NdN\n!choose this that\n!repeat Number Thing to repeat".format(bot.user.mention)
         await bot.send_message(message.channel, msg)
 
-    if message.content.startswith('!FuckMeUpFam'):
-        msg = '!FuckMeUpFam'
-        # msg = 'Hello {0.author.mention} https://www.youtube.com/watch?v=gbt61vcAkG0'.format(message)
+    if message.content.startswith('FuckMeUpFam'):
+        msg = 'Hello {0.author.mention} https://www.youtube.com/watch?v=gbt61vcAkG0'.format(message)
         await bot.send_message(message.channel, msg)
 
 
