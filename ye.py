@@ -2,26 +2,24 @@ import discord
 from discord.ext import commands
 import random
 
-description = '''An example bot to showcase the discord.ext.commands extension
-module.
-There are a number of utility commands being showcased here.'''
+description = "A little bot used for random things"
 bot = commands.Bot(command_prefix='#', description=description)
 
 @bot.event
 async def on_ready():
-    print('Logged in as')
-    print(bot.user.name)
-    print(bot.user.id)
-    print('------')
+    print('Connected')
+    print('Username: ' + bot.user.name)
+    print('ID: ' + bot.user.id)
+
+@bot.event
+async def on_command_error(error, ctx):
+    await bot.say('Error: ' + error)
+    await bot.say('Context: ' + ctx)
 
 @bot.event
 async def hey(message):
-    # we do not want the bot to reply to itself
     if message.content.startswith('#hey'):
-        msg = 'Hello {0.author.mention}'.format(message)
-        await bot.send_message(message.channel, msg)
-    if message.content.startswith('http'):
-        msg = '{0.author.mention} mate stop with the links'.format(message)
+        msg = 'Hello {0.author.mention}\u200B'.format(message)
         await bot.send_message(message.channel, msg)
 
 @bot.command()
