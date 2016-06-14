@@ -9,25 +9,59 @@ with open('config.json') as file:
 description = "Please ignore this bot"
 client = discord.Client()
 pot = 0
+x = {}
+players = {}
 
 
-def placebet(points: int, outcome: str):
+def placebet(points: int, outcome: str, idno: int):
     global pot
     pot += points
     print(pot)
 
+    global players
+    players[idno] = Player(idno)
+    players[idno].setbet(points, outcome)
+    print(players[idno].points)
+    print(players[idno].outcome)
+    print("^Dict")
 
-class PlaceBet():
-    def __init__(self, points, outcome):
+
+def betresult(outcome: str):
+    print("words")
+
+
+def showpoints(idno: int):
+    return x[idno]
+
+"""
+    x[id] += points
+    print(x[id])
+
+    Use to store the users points
+
+    def givepoints(id: int, points: int)
+        x[id] += points
+"""
+
+
+class Player:
+    def __init__(self, idno):
+        self.idno = idno
+        self.points = 0
+        self.outcome = 0
+
+    def setbet(self, points, outcome):
         self.points = points
         self.outcome = outcome
 
 
+
 @client.event
 async def on_ready():
-    x = []
+    global x
     for member in client.get_all_members():
-        x.append(member.id)
+        players
+        x[member.id] = 0
     print(x)
 
     print('Connected')
@@ -40,13 +74,16 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    if message.content.startswith('cunt'):
+        print("a")
+
     if message.content.startswith('!bet'):
         try:
             command, points, outcome = message.content.split()
             if points.isdigit() and int(points) < 1000:
                 msg = outcome + " " + points
                 if outcome in ['win', 'lose']:
-                    placebet(int(points), outcome)
+                    placebet(int(points), outcome, message.author.id)
                     msg = 'Bet placed for {}, the pot is now {}'.format(message.author.mention, pot)
                 else:
                     msg = 'Please use the correct format\n!bet (AMOUNT) (OUTCOME)'
