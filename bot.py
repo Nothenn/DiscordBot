@@ -95,7 +95,6 @@ async def on_message(message):
             dude = message.author.server.get_member(players[idno].idno)
             msg = '{} has now got {} points'.format(dude.name, x[idno])
             await client.send_message(message.channel, msg)
-            # players[idno].setbet(0, '')
         players.clear()
         potcommand('empty')
 
@@ -117,7 +116,7 @@ async def on_message(message):
                 else:
                     msg = 'Please use the correct format\n!bet (AMOUNT) (OUTCOME)'
             else:
-                msg = 'Please use the correct format\n!bet (AMOUNT) (OUTCOME)'
+                msg = 'Please use the correct format\n!bet (AMOUNT) (OUTCOME)' # This shit is fucking filthy, needs fixing
         except ValueError:
             return
             msg = 'Please use the correct format\n!bet (AMOUNT) (Win or Lose)'
