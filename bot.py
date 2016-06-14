@@ -1,83 +1,64 @@
 import discord
 import json
-import random
-
 
 with open('config.json') as file:
     config = json.load(file)
 
+with open('scoreboard.json') as readboard:
+    scoreboard = json.load(readboard)
+    print(scoreboard)
+
 description = 'Please ignore this bot'
 client = discord.Client()
-pot = 0
-x = {}
+players = {}
+filename = "G:\DiscordBot\quinoa.png"
 
-'''
-    TODO:
-    Add betters to file store score
-    Either make it not a pot or make it so its a duel
-'''
 
 def placebet(points: int, outcome: str, idno: int):
     print(str(idno) + 'has placed a bet for ' + str(points))
 
-    global pot
-    pot += points
-
-    global players
     players[idno] = Player(idno)
     players[idno].setbet(points, outcome)
 
 
 def betresult(outcome: str):
-    print(outcome)
     for eyed in players:
-        print(players[eyed].idno)
-        print(players[eyed].outcome)
         if players[eyed].outcome == outcome:
-            givepoints(eyed, pot)
+            givepoints(eyed, players[eyed].bet)
         else:
-            takepoints(eyed, pot)
+            takepoints(eyed, players[eyed].bet)
+
+    with open('scoreboard.json', 'w') as f:
+        json.dump(scoreboard, f, sort_keys=True, indent=4)
 
 
 def givepoints(idno: int, points: int):
-    x[idno] += points
+    scoreboard[idno] += points
 
 
 def takepoints(idno: int, points:int):
-    x[idno] -= points
-
-
-def potcommand(dothing):
-    if dothing == 'empty':
-        global pot
-        pot = 0
-    else:
-        return pot
+    scoreboard[idno] -= points
 
 
 def showpoints(idno: int):
-    return x[idno]
+    return scoreboard[idno]
 
 
 class Player:
     def __init__(self, idno):
         self.idno = idno
-        self.points = 0
+        self.bet = 0
         self.outcome = None
 
-    def setbet(self, points, outcome):
-        self.points += points
+    def setbet(self, bet, outcome):
+        self.bet = bet
         self.outcome = outcome
-        print(self.outcome + ' IN PLAYER CLASS')
 
 
 @client.event
 async def on_ready():
-    global x
+    global scoreboard
     global players
-    for member in client.get_all_members():
-        x[member.id] = 0
-    print(x)
 
     print('Connected')
     print('Username: ' + client.user.name)
@@ -89,24 +70,19 @@ async def on_message(message):
     if message.author == client.user:
         return
 
-    if message.content.startswith('!empty'):
-        potcommand('empty')
-        await client.send_message(message.channel, 'Pot Emptied')
-
-    if message.content.startswith('!pot'):
-        msg = 'The pot is currently {}'.format(potcommand('show'))
-        await client.send_message(message.channel, msg)
-
     if message.content.startswith('!result'):
 
         command, outcome = message.content.split()
         betresult(outcome)
         for idno in players:
             dude = message.author.server.get_member(players[idno].idno)
-            msg = '{} has now got {} points'.format(dude.name, x[idno])
+            msg = '{} has now got {} points'.format(dude.name, scoreboard[idno])
             await client.send_message(message.channel, msg)
         players.clear()
-        potcommand('empty')
+
+    if message.content.startswith('LOADSAMONEY'):
+        if message.author.id == '114777488458121218':
+            givepoints(message.author.id, 10000)
 
     if message.content.startswith('!bet'):
         try:
@@ -119,10 +95,10 @@ async def on_message(message):
                             msg = '{} you have already bet the opposite'.format(message.author.mention)
                         else:
                             placebet(int(points), outcome, message.author.id)
-                            msg = 'Bet placed for {}, the pot is now {}'.format(message.author.mention, pot)
+                            msg = 'Bet placed for {}'.format(message.author.mention)
                     except KeyError:
                         placebet(int(points), outcome, message.author.id)
-                        msg = 'Bet placed for {}, the pot is now {}'.format(message.author.mention, pot)
+                        msg = 'Bet placed for {}'.format(message.author.mention)
                 else:
                     msg = 'Please use the correct format\n!bet (AMOUNT) (OUTCOME)'
             else:
@@ -130,9 +106,6 @@ async def on_message(message):
         except ValueError:
             return
             msg = 'Please use the correct format\n!bet (AMOUNT) (Win or Lose)'
-
-        print(message.content)
-
         await client.send_message(message.channel, msg)
 
     if message.content.startswith('!points'):
@@ -149,7 +122,10 @@ async def on_message(message):
         msg = 'Hello {0.author.mention} https://www.youtube.com/watch?v=gbt61vcAkG0'.format(message)
         await client.send_message(message.channel, msg)
 
-    if message.content.startswith('kill me'):
+    if message.content.startswith('!kanye'):
+        await client.send_file(message.channel, filename)
+
+    if message.content.startswith('!kill me'):
         msg = '{} you are now dead'.format(message.author.mention)
         await client.send_message(message.channel, msg)
 

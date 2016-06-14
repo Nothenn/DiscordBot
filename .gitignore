@@ -1,3 +1,5 @@
 .idea/
 Thumbs.db
-*.json
+config.json
+*.png
+*.mp3
