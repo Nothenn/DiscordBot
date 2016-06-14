@@ -10,8 +10,12 @@ description = 'Please ignore this bot'
 client = discord.Client()
 pot = 0
 x = {}
-players = {}
 
+'''
+    TODO:
+    Add betters to file store score
+    Either make it not a pot or make it so its a duel
+'''
 
 def placebet(points: int, outcome: str, idno: int):
     print(str(idno) + 'has placed a bet for ' + str(points))
@@ -31,10 +35,16 @@ def betresult(outcome: str):
         print(players[eyed].outcome)
         if players[eyed].outcome == outcome:
             givepoints(eyed, pot)
+        else:
+            takepoints(eyed, pot)
 
 
 def givepoints(idno: int, points: int):
     x[idno] += points
+
+
+def takepoints(idno: int, points:int):
+    x[idno] -= points
 
 
 def potcommand(dothing):
