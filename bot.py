@@ -1,4 +1,4 @@
-import discord
+import discord, sys
 import json
 
 with open('config.json') as file:
@@ -111,6 +111,10 @@ async def on_message(message):
     if message.content.startswith('!points'):
         msg = '{} has {} points'.format(message.author.mention, showpoints(message.author.id))
         await client.send_message(message.channel, msg)
+
+    if message.content.startswith('!quit'):
+        await  client.send_message(message.channel, 'I am leaving now, fuck off you bunch of cunts')
+        sys.exit('Closing Down...')
 
     if message.content.startswith('!help'):
         await client.send_message(message.channel, 'Insert some help here\nYeezy just jumped over jumpman')
