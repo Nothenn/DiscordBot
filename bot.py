@@ -6,7 +6,6 @@ with open('config.json') as file:
 
 with open('scoreboard.json') as readboard:
     scoreboard = json.load(readboard)
-    print(scoreboard)
 
 description = 'Please ignore this bot'
 client = discord.Client()
@@ -87,7 +86,7 @@ async def on_message(message):
     if message.content.startswith('!bet'):
         try:
             command, points, outcome = message.content.split()
-            if points.isdigit() and int(points) < 1000:
+            if points.isdigit():
                 msg = outcome + ' ' + points
                 if outcome in ['win', 'lose']:
                     try:
@@ -101,11 +100,13 @@ async def on_message(message):
                         msg = 'Bet placed for {}'.format(message.author.mention)
                 else:
                     msg = 'Please use the correct format\n!bet (AMOUNT) (OUTCOME)'
+            elif players[message.author.id].points > points:
+                msg = '{} You don\'t have that many points!'.format(message.author.mention)
             else:
-                msg = 'Please use the correct format\n!bet (AMOUNT) (OUTCOME)' # This shit is fucking filthy, needs fixing
+                msg = 'Please use the correct format\n!bet (AMOUNT) (OUTCOME)'
         except ValueError:
-            return
             msg = 'Please use the correct format\n!bet (AMOUNT) (Win or Lose)'
+            return
         await client.send_message(message.channel, msg)
 
     if message.content.startswith('!points'):
