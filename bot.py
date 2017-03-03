@@ -79,7 +79,7 @@ async def on_message(message):
             await client.send_message(message.channel, msg)
         players.clear()
 
-    if message.content.startswith('LOADSAMONEY'):
+    if message.content.startswith('Points'):
         if message.author.id == '114777488458121218':
             givepoints(message.author.id, 10000)
 
@@ -114,23 +114,20 @@ async def on_message(message):
         await client.send_message(message.channel, msg)
 
     if message.content.startswith('!quit'):
-        await  client.send_message(message.channel, 'I am leaving now, fuck off you bunch of cunts')
+        await  client.send_message(message.channel, 'I am leaving now')
         sys.exit('Closing Down...')
 
     if message.content.startswith('!help'):
-        await client.send_message(message.channel, 'Insert some help here\nYeezy just jumped over jumpman')
+        await client.send_message(message.channel, 'Insert some help here')
 
-    if message.content.startswith('!okay'):
-        await client.send_message(message.channel, 'okay okay okay okay okay OKAY https://streamable.com/om4j')
-
-    if message.content.startswith('!fuckmeup'):
+    if message.content.startswith('!letsgo'):
         msg = 'Hello {0.author.mention} https://www.youtube.com/watch?v=gbt61vcAkG0'.format(message)
         await client.send_message(message.channel, msg)
 
     if message.content.startswith('!kanye'):
         await client.send_file(message.channel, filename)
 
-    if message.content.startswith('!kill me'):
+    if message.content.startswith('!killme'):
         msg = '{} you are now dead'.format(message.author.mention)
         await client.send_message(message.channel, msg)
 
